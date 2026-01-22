@@ -19,7 +19,7 @@ class VectorMemory(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     
-    # Enterprise Multi-tenancy Isolation
+    # Enterprise Multi-tenancy Isolation (According to the company name data grouped)
     tenant_id: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
     
     # The raw text content (e.g., "Customer complained about billing...")
@@ -36,14 +36,24 @@ class VectorMemory(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
-    #    HNSW Index: Faster, real-time, production-grade
+    # --- Database 'Search Engine' Configuration ---
+    # Optimized for Cosine Similarity (Comparing the ANGLE between ideas)
     __table_args__ = (
         Index(
-            "ix_vector_memory_embedding",
-            "embedding",
-            postgresql_using="hnsw",
-            postgresql_with={"m": 16, "ef_construction": 64},
-            postgresql_ops={"embedding": "vector_l2_ops"},
+            "ix_vector_memory_embedding", 
+            "embedding", 
+            
+            # HNSW: The algorithm that creates a 'web' of connections for fast travel
+            postgresql_using="hnsw", 
+            
+            # Tuning the Web:
+            # m: Each memory links to 16 'neighbors' (the size of the web)
+            # ef_construction: 64 search points to find the best neighbors for accuracy
+            postgresql_with={"m": 16, "ef_construction": 64}, 
+            
+            # The measuring tool: CHANGED to 'vector_cosine_ops'
+            # This looks at how similar the "direction" of two ideas are.
+            postgresql_ops={"embedding": "vector_cosine_ops"}, 
         ),
     )
 
