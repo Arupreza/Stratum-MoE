@@ -1,0 +1,30 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17 # Latest PG with vector support
+    container_name: moe_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: arupreza
+      POSTGRES_PASSWORD: 0000
+      POSTGRES_DB: memorygraph
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: moe_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: arupreza@sch.ac.kr
+      PGADMIN_DEFAULT_PASSWORD: 0000
+    ports:
+      - "5050:80"
+
+volumes:
+  postgres_data:
+
+#########################################
+# Create the docker : docker compose up -d
+# docker compose ps
+# Remove all : docker rm -f $(docker ps -aq)
+#########################################

@@ -1,0 +1,26 @@
+# --- Core Orchestration ---
+langgraph>=0.3.5
+langchain-core>=0.3.41
+langchain-community>=0.3.0
+
+# --- LLM & Embeddings ---
+langchain-openai>=0.3.5
+openai>=1.50.0
+sentence-transformers>=3.0.0  # For local embedding fallback
+
+# --- Database & Persistence ---
+sqlalchemy>=2.0.30
+asyncpg>=0.29.0              # Async driver for PostgreSQL
+psycopg[binary,pool]>=3.2.0  # Required for pgvector and connection pooling
+pgvector>=0.3.2              # Python client for pgvector
+
+# --- Environment & Validation ---
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+python-dotenv>=1.0.1
+
+# --- Utilities & Performance ---
+alembic>=1.13.0              # DB Migrations
+tqdm>=4.66.0                 # Progress bars for ingestion
+httpx>=0.27.0                # Async HTTP requests
+loguru>=0.7.0                # Structured logging
