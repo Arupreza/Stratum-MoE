@@ -4,6 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?style=flat&logo=python&logoColor=white)
 ![LangGraph](https://img.shields.io/badge/LangGraph-0.2.0+-green?style=flat)
+![GPT-4o mini](https://img.shields.io/badge/GPT--4o--mini-OpenAI-412991?style=flat&logo=openai&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?style=flat&logo=postgresql&logoColor=white)
 ![pgvector](https://img.shields.io/badge/pgvector-0.5+-orange?style=flat)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat)
@@ -111,6 +112,19 @@ Every answer includes full provenance tracked through LangGraph state:
     "latency_ms": 847
   }
 }
+```
+
+### 🤖 **LLM Integration (GPT-4o Mini)**
+- **Cost-optimized**: 15-60x cheaper than GPT-4 for production workloads
+- **Fast inference**: ~300-500ms response time for synthesis tasks
+- **Strategic usage**: LLM called only for synthesis, fact extraction, and compliance checks
+- **Heavy lifting**: Retrieval and routing handled by MoE system, not LLM
+
+```python
+# LLM used in 3 specific nodes:
+# 1. Synthesizer expert: Combine expert results → structured answer
+# 2. Compliance expert: PII detection patterns
+# 3. Writeback node: STM → LTM summarization
 ```
 
 ### 🛡️ **Enterprise Controls**
@@ -377,6 +391,11 @@ uv run python -m moe_memorygraph.graph.visualize --output graph.png
 # Database
 DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/memorygraph
 
+# OpenAI (GPT-4o mini)
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_TEMPERATURE=0.1
+
 # LangGraph
 LANGGRAPH_CHECKPOINTING=true
 LANGGRAPH_DEBUG=false
@@ -476,6 +495,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## 🙏 Acknowledgments
 
 - **LangGraph** for stateful orchestration framework
+- **OpenAI GPT-4o mini** for cost-effective LLM inference
 - **LangChain** for LLM tooling ecosystem
 - **pgvector** for efficient vector search
 - **Bitext** for customer support dataset
