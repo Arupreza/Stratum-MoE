@@ -25,6 +25,9 @@ volumes:
 
 #########################################
 # Create the docker : docker compose up -d
-# docker compose ps
-# Remove all : docker rm -f $(docker ps -aq)
+# docker ps: Shows only running containers.
+# docker ps -a: The -a stands for all. It shows every container on your system, regardless of whether it is running, stopped, or just created.
+# Remove all : docker rm -f moe_db moe_pgadmin && docker volume prune -f
+## 1. Stop and remove the 'Created' but non-functional containers
+# docker compose down
 #########################################
