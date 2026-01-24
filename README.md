@@ -83,7 +83,7 @@ graph.add_node("writeback", update_memory_stores)
 * [x] **Async Logic:** Database connection handling via `session.py`.
 * [x] **Initialization:** `init_db.py` verified and tables created.
 
-### 🚧 Phase 3: Knowledge Ingestion (CURRENT)
+### ✅ Phase 3: Knowledge Ingestion (CURRENT)
 **Goal:** Feed the brain with raw data.
 
 * [ ] **Embedder:** Create the utility to turn text into high-dimensional vectors.
