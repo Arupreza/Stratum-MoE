@@ -7,7 +7,7 @@ from moe_memorygraph.db.session import AsyncSessionLocal
 from moe_memorygraph.db.models import VectorMemory
 from moe_memorygraph.core.embedding import embedder
 
-async def ingest_local_csv(limit: int = 100):
+async def ingest_local_csv(limit: int = 26872):
     """
     Reads a local CSV file and saves memories to Postgres.
     """

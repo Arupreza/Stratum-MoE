@@ -37,4 +37,9 @@ volumes:
 
 #  If it asks for a password: This means even the local user is locked out.:
 # docker exec -it moe_db psql -U postgres -c "ALTER USER arupreza WITH PASSWORD '0000';"
+
+#Ask the Database "What tables do you have?
+# docker exec -it moe_db psql -U arupreza -d memorygraph -c "\dt"
+
+
 #########################################

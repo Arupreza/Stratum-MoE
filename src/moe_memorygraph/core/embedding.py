@@ -1,37 +1,69 @@
+# SYNTAX: Import 'torch' (PyTorch).
+# LOGIC: This is the heavy math engine deep underneath. We need it directly 
+# so we can ask the hardware: "Do you have a GPU?"
+import torch
+
 from sentence_transformers import SentenceTransformer
 from moe_memorygraph.core.config import settings
 
 class EmbeddingService:
     """
     Singleton service to handle text embedding generation.
-    Loads the model once and reuses it.
+    Automatically detects GPU (CUDA/MPS) or CPU for maximum performance.
     """
+    
     def __init__(self):
-        # LOGIC: Loading an AI model takes time and RAM (approx 100MB).
-        # We do this inside __init__ so it happens ONLY ONCE when the app starts.
+        # --- HARDWARE DETECTION LOGIC ---
+        
+        # SYNTAX: torch.cuda.is_available()
+        # LOGIC: Check for NVIDIA GPUs first. These are the gold standard for AI.
+        # If found, we set the device flag to "cuda".
+        if torch.cuda.is_available():
+            self.device = "cuda"
+            print(f"🚀 GPU Detected: Running on NVIDIA CUDA ({torch.cuda.get_device_name(0)})")
+            
+        # SYNTAX: torch.backends.mps.is_available()
+        # LOGIC: Check for Apple Silicon (M1/M2/M3) GPUs. 
+        # 'mps' stands for Metal Performance Shaders. 
+        elif torch.backends.mps.is_available():
+            self.device = "mps"
+            print("🍎 GPU Detected: Running on Apple Metal (MPS)")
+            
+        # LOGIC: Fallback. If no fancy hardware is found, use the standard CPU.
+        # It's slower (approx 20x), but it guarantees the code won't crash.
+        else:
+            self.device = "cpu"
+            print("🐢 No GPU detected: Running on Standard CPU")
+
         print(f"🧠 Loading embedding model: {settings.EMBEDDING_MODEL}...")
         
-        # SYNTAX: 'SentenceTransformer' is the library that runs the model.
-        # 'settings.EMBEDDING_MODEL' pulls the string "sentence-transformers/all-MiniLM-L6-v2" 
-        # from your config.py file.
-        self.model = SentenceTransformer(settings.EMBEDDING_MODEL)
+        # SYNTAX: SentenceTransformer(..., device=self.device)
+        # LOGIC: The 'device' parameter is critical.
+        # It tells the library to load the 400MB model weights directly into VRAM (Video RAM)
+        # if a GPU is used. If we didn't do this, the model would sit in slow RAM 
+        # while the GPU sat idle.
+        self.model = SentenceTransformer(settings.EMBEDDING_MODEL, device=self.device)
 
     def embed_query(self, text: str) -> list[float]:
         """Generates a vector embedding for a single string."""
         
-        # LOGIC: Safety Check. If you try to embed an empty string, the model might crash
-        # or return garbage. We catch it early and return an empty list.
+        # LOGIC: Input Guard.
+        # If we feed an empty string to the model, it wastes computation 
+        # or returns a garbage vector. We catch it early.
         if not text:
             return []
-            
-        # SYNTAX: self.model.encode(text)
-        # This function runs the neural network. It returns a 'NumPy Array' (optimized C code).
-        # PostgreSQL does not understand NumPy. It only understands standard Python Lists.
-        # .tolist() converts the C-array into a regular Python [0.1, 0.2...] list.
-        return self.model.encode(text).tolist()
+        
+        # SYNTAX: self.model.encode(...)
+        # LOGIC: 
+        # 1. We pass the text to the neural network.
+        # 2. 'device=self.device': We must remind the function to use the GPU for *this specific calculation*.
+        # 3. .tolist(): The model returns a 'NumPy Array' (C++ optimized format).
+        #    PostgreSQL cannot understand NumPy. It needs a standard Python List [0.1, 0.2...].
+        #    This method performs that conversion.
+        return self.model.encode(text, device=self.device).tolist()
 
-# LOGIC: The Singleton Pattern
-# We create the variable 'embedder' right here at the bottom.
-# Any other file that imports 'embedder' will share THIS exact instance.
-# This prevents your app from loading the model 50 times and crashing your RAM.
+# SYNTAX: Singleton Instantiation
+# LOGIC: We create the variable 'embedder' here at the module level.
+# This means the model is loaded ONLY ONCE when you start the app.
+# Any file that says 'from core.embedding import embedder' just borrows this existing object.
 embedder = EmbeddingService()
