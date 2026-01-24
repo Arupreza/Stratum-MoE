@@ -30,4 +30,11 @@ volumes:
 # Remove all : docker rm -f moe_db moe_pgadmin && docker volume prune -f
 ## 1. Stop and remove the 'Created' but non-functional containers
 # docker compose down
+
+# docker compose down -v (Stops the running containers and removes them, along with the internal networks Docker created for them)
+# docker compose up -d
+# docker logs -f moe_db (Check the docker logs)
+
+#  If it asks for a password: This means even the local user is locked out.:
+# docker exec -it moe_db psql -U postgres -c "ALTER USER arupreza WITH PASSWORD '0000';"
 #########################################

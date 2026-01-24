@@ -9,8 +9,9 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "MoE MemoryGraph"
     
     # Database Settings (Matches your Docker Compose setup)
-    # Format: postgresql+asyncpg://user:password@host:port/dbname
-    DATABASE_URL: str = "postgresql+asyncpg://arupreza:0000@localhost:5432/memorygraph"
+    # 1. FIXED: Removed '?ssl=disable' to prevent asyncpg crash
+    # 2. KEPT: '127.0.0.1' to fix the connection refused error
+    DATABASE_URL: str = "postgresql+asyncpg://arupreza:0000@127.0.0.1:5432/memorygraph"
     
     # LLM Settings
     OPENAI_API_KEY: str = ""

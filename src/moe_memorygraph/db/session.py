@@ -1,25 +1,29 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import AsyncGenerator
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-class Settings(BaseSettings):
-    """
-    Centralized configuration for the application.
-    Reads from .env file or environment variables.
-    """
-    # Application settings
-    PROJECT_NAME: str = "MoE MemoryGraph"
-    
-    # Database Settings (Matches your Docker Compose setup)
-    # Format: postgresql+asyncpg://user:password@host:port/dbname
-    DATABASE_URL: str = "postgresql+asyncpg://arupreza:0000@localhost:5432/memorygraph"
-    
-    # LLM Settings
-    OPENAI_API_KEY: str = ""
-    OPENAI_MODEL: str = "gpt-4o-mini"
-    
-    # Vector Settings
-    EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
+# --- FIX THE IMPORT HERE ---
+# Old: from src.core.config import settings
+# New: Import from the package namespace
+from moe_memorygraph.core.config import settings 
 
-    # Load from .env file if available
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=False,
+    future=True,
+    pool_size=20,
+    max_overflow=10
+)
 
-settings = Settings()
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+    autoflush=False
+)
+
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()

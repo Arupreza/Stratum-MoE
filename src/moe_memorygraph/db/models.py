@@ -58,6 +58,8 @@ class VectorMemory(Base):
     )
 
 # 3. Semantic Plane (Structured Facts)
+# The Semantic Plane is the difference between an AI that "guesses" based on vibes and 
+# an AI that "knows" facts with 100% certainty
 class SemanticFact(Base):
     """
     Stores exact facts extracted from conversations.
