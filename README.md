@@ -1,5 +1,11 @@
-# 📊 MoE MemoryGraph: Enterprise Customer Intelligence System
 
+# 🗺️ Stratum-MoE (Enterprise Customer Intelligence System)
+
+**A High-Performance Agentic Memory Architecture with Mixture of Experts (MoE) Logic.**
+
+Stratum-MoE is an advanced retrieval and reasoning system that combines vector databases, semantic graph memory, and intelligent routing to provide a "long-term brain" for AI agents.
+
+---
 <div align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?style=flat&logo=python&logoColor=white)
@@ -58,14 +64,6 @@ graph.add_node("aggregate", aggregate_expert_results)
 graph.add_node("synthesize", generate_final_answer)
 graph.add_node("writeback", update_memory_stores)
 ```
-
-# 🗺️ Stratum-MoE
-
-**A High-Performance Agentic Memory Architecture with Mixture of Experts (MoE) Logic.**
-
-Stratum-MoE is an advanced retrieval and reasoning system that combines vector databases, semantic graph memory, and intelligent routing to provide a "long-term brain" for AI agents.
-
----
 
 ## 🚀 The Master Plan
 
