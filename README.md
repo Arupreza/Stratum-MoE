@@ -24,24 +24,28 @@ A production-grade **LangGraph-powered** Mixture-of-Experts (MoE) agentic system
 
 ---
 
-## 🎯 Problem & Solution
+## 🎯 Why Stratum-MoE?
 
-### The Problem
-Customer success teams waste **5+ hours** manually searching thousands of support tickets to answer strategic questions:
-- *"Why did enterprise customers churn in Q4?"*
-- *"What compliance risks exist in our support conversations?"*
-- *"Generate a health report for Acme Corp with evidence"*
+### 🔻 The Problem: "Data Amnesia" in Customer Support
+Enterprise support teams generate thousands of tickets, logs, and interaction notes every week. When a stakeholder asks a strategic question like *"Why are enterprise clients churning in Q4?"*, the current process is broken:
+* **Manual & Slow:** Analysts must manually read hundreds of tickets (taking 5+ hours).
+* **Unreliable:** Humans miss patterns and rely on fragmented memory.
+* **No Evidence:** Reports are often based on "gut feeling" rather than hard data citations.
 
-**Current approach:** Read 100+ tickets manually → Check CRM notes → Ask around → Write report based on memory  
-**Result:** Slow, low confidence, no proof, misses patterns
+### 🔺 The Solution: An Agentic "Brain" with Total Recall
+**Stratum-MoE** replaces manual searching with an intelligent, 4-plane memory architecture orchestrated by **LangGraph**. Instead of a generic LLM wrapper, it acts as a **Mixture-of-Experts (MoE)** system that:
 
-### The Solution
-A **LangGraph-orchestrated** intelligent memory system that:
-- ✅ Routes queries through a stateful graph with conditional edges
-- ✅ Answers complex queries in **30 seconds** with citations
-- ✅ Dynamically selects specialized experts via MoE gating
-- ✅ Provides **confidence scores** and full **audit trails**
-- ✅ Learns from usage patterns via write-back loops
+1.  **Understands Context:** Dynamically routes queries to the right expert (Vector Search vs. Semantic Graph).
+2.  **Reasons, Don't Just Retrieve:** Uses a stateful graph workflow to verify facts before answering.
+3.  **Cites Sources:** Every answer comes with exact citations (e.g., *"Reference: Ticket #402, Interaction 3"*).
+4.  **Learns:** Features a write-back loop to store new insights into Long-Term Memory (LTM).
+
+| Feature | Legacy Approach | Stratum-MoE Approach |
+| :--- | :--- | :--- |
+| **Speed** | 5+ Hours | < 30 Seconds |
+| **Method** | Keyword Search + Reading | Semantic Routing + Expert Agents |
+| **Accuracy** | Low (Human Bias) | High (Confidence Scored) |
+| **Audit** | None | Full Reasoning Trace |
 
 ---
 
