@@ -59,6 +59,69 @@ graph.add_node("synthesize", generate_final_answer)
 graph.add_node("writeback", update_memory_stores)
 ```
 
+# 🗺️ Stratum-MoE
+
+**A High-Performance Agentic Memory Architecture with Mixture of Experts (MoE) Logic.**
+
+Stratum-MoE is an advanced retrieval and reasoning system that combines vector databases, semantic graph memory, and intelligent routing to provide a "long-term brain" for AI agents.
+
+---
+
+## 🚀 The Master Plan
+
+### ✅ Phase 1: Infrastructure
+**Goal:** Build the physical server and environment.
+* [x] **Docker Integration:** PostgreSQL + `pgvector` containers deployed and verified.
+* [x] **Environment:** Python environment managed via `uv`.
+* [x] **Configuration:** Centralized `config.py` and `.env` synchronization.
+
+### ✅ Phase 2: Database Architecture
+**Goal:** Design the brain's storage.
+* [x] **SQLAlchemy Models:** Implemented `VectorMemory` and `SemanticFact`.
+* [x] **Async Logic:** Database connection handling via `session.py`.
+* [x] **Initialization:** `init_db.py` verified and tables created.
+
+### 🚧 Phase 3: Knowledge Ingestion (CURRENT)
+**Goal:** Feed the brain with raw data.
+
+* [ ] **Embedder:** Create the utility to turn text into high-dimensional vectors.
+* [ ] **Loader:** Download the **Bitext dataset** and insert it into the database.
+* [ ] **Verification:** Confirm data exists in the `vector_memories` table.
+
+### 🔒 Phase 4: The Retrieval Engine
+**Goal:** Teach the brain to "remember" effectively.
+* [ ] **VectorRetrieve Expert:** Specialized module for similarity search.
+* [ ] **Hybrid Search:** Implement Vector + Keyword (BM25) search.
+* [ ] **Accuracy Testing:** Ask a question -> Get the right context.
+
+### 🧠 Phase 5: The Agentic Brain (The Finale)
+**Goal:** The "MoE" (Mixture of Experts) Logic.
+
+* [ ] **Gating Network:** The "Router" that decides which expert to call.
+* [ ] **LangGraph Integration:** Connecting the nodes (*Router -> Retriever -> Generator*).
+* [ ] **API Interface:** Final CLI or API to interact with the bot.
+
+---
+
+## 🛠️ Tech Stack
+
+| Component | Technology |
+| :--- | :--- |
+| **Runtime** | Python 3.11+ |
+| **Package Manager** | [uv](https://github.com/astral-sh/uv) |
+| **Database** | PostgreSQL 17 + `pgvector` |
+| **ORM** | SQLAlchemy (Async) |
+| **Orchestration** | Docker Compose |
+| **Agent Logic** | LangGraph (Planned) |
+
+---
+
+## ⚡ Quick Start
+
+### 1. Bring up the Infrastructure
+```bash
+docker compose up -d
+
 ### 🧠 **Four-Plane Memory Architecture**
 | Plane | Purpose | Example |
 |-------|---------|---------|
