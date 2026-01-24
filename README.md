@@ -196,34 +196,6 @@ Every answer includes full provenance tracked through LangGraph state:
 
 ---
 
-## 🏗️ LangGraph Architecture
-
-```
-# 🗺️ Stratum-MoE (Enterprise Customer Intelligence System)
-
-**A High-Performance Agentic Memory Architecture with Mixture of Experts (MoE) Logic.**
-
-Stratum-MoE is an advanced retrieval and reasoning system that combines vector databases, semantic graph memory, and intelligent routing to provide a "long-term brain" for AI agents.
-
----
-<div align="center">
-
-![Python](https://img.shields.io/badge/Python-3.11+-blue?style=flat&logo=python&logoColor=white)
-![LangGraph](https://img.shields.io/badge/LangGraph-0.2.0+-green?style=flat)
-![GPT-4o mini](https://img.shields.io/badge/GPT--4o--mini-OpenAI-412991?style=flat&logo=openai&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17+-336791?style=flat&logo=postgresql&logoColor=white)
-![pgvector](https://img.shields.io/badge/pgvector-0.5+-orange?style=flat)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=flat)
-![Status](https://img.shields.io/badge/Status-Active-success?style=flat)
-
-</div>
-
----
-
-A production-grade **LangGraph-powered** Mixture-of-Experts (MoE) agentic system for intelligent customer support analysis. Orchestrates parallel expert execution through a stateful graph workflow with 4-plane memory architecture (STM/LTM/Semantic/Vector) backed by PostgreSQL + pgvector to answer strategic business questions in seconds.
-
----
-
 ## 🏗️ Architecture
 
 Stratum-MoE uses a "Mixture of Experts" (MoE) approach orchestrated by LangGraph. Instead of a single monolithic model, it dynamically routes queries to specialized experts (Vector Search, Semantic Graph, etc.) based on the complexity of the user's request.
