@@ -19,17 +19,16 @@ class VectorMemory(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     
-    # Enterprise Multi-tenancy Isolation (According to the company name data grouped)
+    # Enterprise Multi-tenancy Isolation
     tenant_id: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
     
-    # The raw text content (e.g., "Customer complained about billing...")
+    # The raw text content
     content: Mapped[str] = mapped_column(Text, nullable=False)
     
-    # Metadata for filtering (e.g., {"source": "email", "date": "2024-01-01"})
+    # Metadata for filtering
     metadata_: Mapped[Dict[str, Any]] = mapped_column("metadata", JSON, default={})
     
-    # The Embedding Vector (384 dimensions is standard for all-MiniLM-L6-v2)
-    # If you use OpenAI embeddings, change 384 to 1536.
+    # The Embedding Vector (384 dimensions for MiniLM-L6-v2)
     embedding: Mapped[List[float]] = mapped_column(Vector(384))
     
     created_at: Mapped[datetime] = mapped_column(
@@ -37,55 +36,39 @@ class VectorMemory(Base):
     )
 
     # --- Database 'Search Engine' Configuration ---
-    # Optimized for Cosine Similarity (Comparing the ANGLE between ideas)
     __table_args__ = (
         Index(
             "ix_vector_memory_embedding", 
             "embedding", 
-            
-            # HNSW: The algorithm that creates a 'web' of connections for fast travel
             postgresql_using="hnsw", 
-            
-            # Tuning the Web:
-            # m: Each memory links to 16 'neighbors' (the size of the web)
-            # ef_construction: 64 search points to find the best neighbors for accuracy
             postgresql_with={"m": 16, "ef_construction": 64}, 
-            
-            # The measuring tool: CHANGED to 'vector_cosine_ops'
-            # This looks at how similar the "direction" of two ideas are.
             postgresql_ops={"embedding": "vector_cosine_ops"}, 
         ),
     )
 
 # 3. Semantic Plane (Structured Facts)
-# The Semantic Plane is the difference between an AI that "guesses" based on vibes and 
-# an AI that "knows" facts with 100% certainty
 class SemanticFact(Base):
     """
     Stores exact facts extracted from conversations.
-    Example: Entity='Acme Corp', Attribute='Status', Value='Churned'
     """
     __tablename__ = "semantic_facts"
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
     
-    # The Subject-Predicate-Object triple structure
+    # Subject-Predicate-Object
     entity_name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     attribute: Mapped[str] = mapped_column(String(255), nullable=False)
     value: Mapped[str] = mapped_column(Text, nullable=False)
     
-    # Confidence score from the extraction model (0.0 to 1.0)
     confidence: Mapped[float] = mapped_column(Float, default=1.0)
-    
-    # Where did this fact come from? (Audit trail)
     source_id: Mapped[str] = mapped_column(String(255), nullable=True)
     
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
 
-# 4. Long-Term Memory (LTM) Plane - Optional but recommended
+# 4. Long-Term Memory (LTM) Plane
 class LTMPattern(Base):
     """
     Stores distilled patterns or summaries over time.

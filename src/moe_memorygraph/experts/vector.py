@@ -1,48 +1,35 @@
 from sqlalchemy import select
-from moe_memorygraph.db.session import AsyncSessionLocal
-from moe_memorygraph.db.models import VectorMemory
-from moe_memorygraph.core.embedding import embedder
+from src.moe_memorygraph.db.session import async_session_factory
+from src.moe_memorygraph.db.models import VectorMemory
+from src.moe_memorygraph.core.embedding import embed_text
 
-class VectorRetrievalExpert:
+# THIS IS THE FUNCTION PYTHON IS LOOKING FOR
+async def search_vector_memory(query: str, limit: int = 5, tenant_id: str = "default"):
     """
-    Expert specialized in semantic search using HNSW vector similarity.
+    Expert: Performs semantic similarity search using pgvector.
     """
-    
-    async def search(self, query: str, limit: int = 3) -> list[dict]:
-        """
-        1. Embeds the query.
-        2. Searches DB for nearest neighbors (Cosine Similarity).
-        3. Returns formatted results.
-        """
-        # Guard Clause: Don't search for nothing
-        if not query:
-            return []
+    # 1. Convert text query to vector (embedding)
+    #    (This will use the GPU since your logs show CUDA is active)
+    query_vector = await embed_text(query)
 
-        # 1. Translate User Text -> Vector Math
-        query_vector = embedder.embed_query(query)
+    async with async_session_factory() as session:
+        # 2. Search DB (Cosine Distance)
+        #    Note: Ensure pgvector extension is enabled in your DB
+        stmt = select(VectorMemory).filter(
+            VectorMemory.tenant_id == tenant_id
+        ).order_by(
+            VectorMemory.embedding.cosine_distance(query_vector)
+        ).limit(limit)
 
-        # 2. Database Search
-        async with AsyncSessionLocal() as session:
-            stmt = (
-                select(VectorMemory)
-                # The HNSW Magic: Order by Distance (Smallest distance = Best Match)
-                .order_by(VectorMemory.embedding.cosine_distance(query_vector))
-                .limit(limit)
-            )
-            
-            result = await session.execute(stmt)
-            memories = result.scalars().all()
+        result = await session.execute(stmt)
+        memories = result.scalars().all()
 
-            # 3. Format Output for the Agent
-            return [
-                {
-                    "content": mem.content,
-                    "intent": mem.metadata_.get("intent"),
-                    "category": mem.metadata_.get("category"),
-                    "response": mem.metadata_.get("response") 
-                }
-                for mem in memories
-            ]
-
-# Singleton: Initialize once, reuse everywhere
-vector_expert = VectorRetrievalExpert()
+        # 3. Format output
+        return [
+            {
+                "content": m.content, 
+                "metadata": m.metadata_, 
+                "distance": "N/A" 
+            }
+            for m in memories
+        ]
