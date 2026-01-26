@@ -1,24 +1,28 @@
 import asyncio
-import sys
 from moe_memorygraph.experts.vector import vector_expert
 
-async def run_search(query: str):
-    print(f"🔎 Searching memory for: '{query}'")
-    print("-" * 50)
+async def run_accuracy_test():
+    # 1. Define a test question (Simulating a real user)
+    # This phrasing is DIFFERENT from the CSV, so we test "Semantic" understanding.
+    test_query = "I received a damaged item, how can I get my money back?"
     
-    results = await vector_expert.search(query, limit=3)
-    
+    print(f"❓ User Question: '{test_query}'")
+    print("---------------------------------------------------------")
+
+    # 2. Run the Expert
+    results = await vector_expert.search(test_query, limit=1)
+
+    # 3. Analyze Results
     if not results:
-        print("❌ No memories found.")
+        print("❌ No results found! Check your database.")
         return
 
-    for i, res in enumerate(results, 1):
-        print(f"[{i}] Intent: {res['intent'].upper()}")
-        print(f"    User Asked: {res['content']}")
-        print(f"    Agent Reply: {res['response']}")
-        print("-" * 50)
+    top_match = results[0]
+    print(f"✅ Top Match Found!")
+    print(f"📂 Category: {top_match['category']}")
+    print(f"🧠 Intent:   {top_match['intent']}")
+    print(f"🤖 Answer:   {top_match['response']}")
+    print("---------------------------------------------------------")
 
 if __name__ == "__main__":
-    # Allow user to pass a query arg, or default to a test question
-    user_query = sys.argv[1] if len(sys.argv) > 1 else "I want to cancel my order"
-    asyncio.run(run_search(user_query))
+    asyncio.run(run_accuracy_test())
